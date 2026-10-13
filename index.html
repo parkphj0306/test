@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>행정법원 판사 시뮬레이터 : 법치의 수호자</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="court-app">
+    <!-- 상단 헤더 -->
+    <header class="court-header">
+      <div class="header-emblem">
+        <span class="scale-icon">⚖️</span>
+        <div>
+          <h1>대한민국 행정법원</h1>
+          <p class="sub-title">행정재판 사건 심리 시뮬레이터 (Administrative Law Court)</p>
+        </div>
+      </div>
+      <div class="judge-status">
+        <div class="status-badge" id="judge-rank">배석판사 (1년차)</div>
+        <div class="status-metric">
+          <span>법치 평판:</span>
+          <strong id="reputation-score">100점</strong>
+        </div>
+        <div class="status-metric">
+          <span>진행:</span>
+          <strong id="case-progress">1 / 8</strong>
+        </div>
+        <button id="sound-toggle-btn" class="icon-btn" title="사운드 온/오프">🔔 효과음 켜짐</button>
+      </div>
+    </header>
+
+    <!-- 메인 컨테이너 -->
+    <main class="court-main">
+      <!-- 시작 화면 -->
+      <section id="start-screen" class="view-panel active">
+        <div class="welcome-card">
+          <div class="emblem-large">⚖️</div>
+          <h2>행정법의 세계에 오신 것을 환영합니다</h2>
+          <p class="lead-text">
+            귀하는 오늘 <strong>행정법원 판사</strong>로 임명되었습니다.<br>
+            행정청의 위법·부당한 공권력 행사로부터 <strong>국민의 권익을 구제</strong>하고,
+            동시에 <strong>공공복리와 행정의 법치성</strong>을 수호해야 합니다.
+          </p>
+
+          <div class="info-grid">
+            <div class="info-box">
+              <h3>📜 쟁점 검토</h3>
+              <p>소송요건(대상적격·원고적격 등)과 실체법적 위법성(비례원칙, 신뢰보호, 부당결부금지 등)을 면밀히 분석하세요.</p>
+            </div>
+            <div class="info-box">
+              <h3>🔨 3단계 판결</h3>
+              <p>사건마다 <strong>각하(소송불비)</strong>, <strong>인용(처분취소)</strong>, <strong>기각(적법)</strong> 중 법리에 부합하는 결정을 내리세요.</p>
+            </div>
+            <div class="info-box">
+              <h3>📚 대법원 판례 해설</h3>
+              <p>판결 직후 실제 대한민국 대법원 판결 요지와 행정법 조문이 공개되어 전문 지식을 학습할 수 있습니다.</p>
+            </div>
+          </div>
+
+          <button id="start-btn" class="primary-btn btn-gavel">재판정 입장 (재판 시작) 🔨</button>
+        </div>
+      </section>
+
+      <!-- 재판 진행 화면 -->
+      <section id="court-screen" class="view-panel">
+        <div class="docket-header">
+          <span class="docket-tag" id="docket-type">취소소송</span>
+          <h2 id="docket-number">사건 2024구합1014호</h2>
+          <h3 id="docket-title">영업정지처분 취소청구의 소</h3>
+        </div>
+
+        <div class="court-workspace">
+          <!-- 사건 기록부 (좌측/상단) -->
+          <div class="case-dossier">
+            <div class="dossier-tab active">사건 기록 및 당사자 주장</div>
+            <div class="dossier-content">
+              <div class="summary-section">
+                <h4>📌 사건의 개요 (사실관계)</h4>
+                <p id="case-facts"></p>
+              </div>
+
+              <div class="parties-grid">
+                <div class="party-card plaintiff">
+                  <div class="party-header">
+                    <span class="party-role">원고 (국민 / 신청인)</span>
+                    <span id="plaintiff-name" class="party-name">홍길동</span>
+                  </div>
+                  <div class="party-claim">
+                    <strong>주장 요지:</strong>
+                    <p id="plaintiff-arg"></p>
+                  </div>
+                </div>
+
+                <div class="party-card defendant">
+                  <div class="party-header">
+                    <span class="party-role">피고 (행정청 / 처분청)</span>
+                    <span id="defendant-name" class="party-name">○○구청장</span>
+                  </div>
+                  <div class="party-claim">
+                    <strong>항변 요지:</strong>
+                    <p id="defendant-arg"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="legal-hint-box">
+                <span class="hint-icon">💡</span>
+                <div>
+                  <strong>핵심 심리 쟁점 (Issue)</strong>
+                  <p id="case-core-issue"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 판결 작성대 (우측/하단) -->
+          <div class="verdict-station">
+            <div class="station-header">
+              <h3>판결 선고 (주문 결정)</h3>
+              <p class="station-desc">사실관계와 행정법 법리를 검토하여 올바른 판결 주문을 선택하십시오.</p>
+            </div>
+
+            <div class="options-container" id="verdict-options">
+              <!-- 자바스크립트로 선택지 동적 생성 -->
+            </div>
+
+            <div class="reasoning-note">
+              <label for="law-principle-select"><strong>적용 주요 법리 / 원칙:</strong></label>
+              <select id="law-principle-select" class="custom-select">
+                <option value="">적용할 행정법 법리를 선택하세요 (선택 사항)</option>
+                <option value="비례의 원칙">비례의 원칙 (과잉금지의 원칙)</option>
+                <option value="신뢰보호의 원칙">신뢰보호의 원칙</option>
+                <option value="부당결부금지의 원칙">부당결부금지의 원칙</option>
+                <option value="취소소송의 대상적격 (처분성)">취소소송의 대상적격 (처분성 판단)</option>
+                <option value="원고적격 (법률상 이익)">원고적격 (법률상 보호되는 이익)</option>
+                <option value="행정행위의 하자 (취소 vs 무효)">행정행위의 하자 (취소사유와 무효의 구별)</option>
+                <option value="국가배상책임 (직무행위/영조물하자)">국가배상법상 책임 요건</option>
+                <option value="행정대집행의 요건">행정대집행 대상 (대체적 작위의무)</option>
+              </select>
+            </div>
+
+            <button id="submit-verdict-btn" class="primary-btn btn-gavel full-width">
+              주문 선고 (법봉 타격) 🔨
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 판결 결과 및 해설 모달 -->
+      <div id="verdict-modal" class="modal-overlay">
+        <div class="modal-card">
+          <div class="modal-header" id="modal-status-banner">
+            <span id="modal-icon">✅</span>
+            <h3 id="modal-title">적법 타당한 판결입니다!</h3>
+          </div>
+          
+          <div class="modal-body">
+            <div class="result-score-change" id="modal-score-feedback">
+              평판 점수 +15점 획득
+            </div>
+
+            <div class="law-precedent-box">
+              <div class="precedent-title">
+                <span class="badge-precedent">대법원 판례 / 법리</span>
+                <strong id="precedent-case-name">대법원 2012. 10. 11. 선고 2010두1676 판결 등</strong>
+              </div>
+              <div class="precedent-content" id="precedent-summary">
+                <!-- 판례 요지 -->
+              </div>
+            </div>
+
+            <div class="law-explanation">
+              <h4>📖 행정법 전문 해설</h4>
+              <p id="precedent-explanation"></p>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button id="next-case-btn" class="primary-btn">다음 사건 심리하기 ➡️</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 최종 결과 화면 (수료/엔딩) -->
+      <section id="end-screen" class="view-panel">
+        <div class="ending-card">
+          <div class="ending-emblem" id="end-emblem">🏛️</div>
+          <h2 id="end-title">행정재판 연수 및 심리 완료</h2>
+          <p class="final-score-text">최종 법치 평판: <span id="final-score" class="highlight-score">0점</span></p>
+          <div class="final-rank-box">
+            <span class="rank-label">최종 수여 직급</span>
+            <h3 id="final-rank-name">대법관 (최고 법관)</h3>
+            <p id="final-rank-desc"></p>
+          </div>
+
+          <div class="stats-summary" id="stats-summary">
+            <!-- 사건별 정답 여부 요약 -->
+          </div>
+
+          <div class="ending-actions">
+            <button id="restart-btn" class="primary-btn">처음부터 다시 도전하기 🔄</button>
+            <a href="README.md" target="_blank" class="secondary-btn">배포 및 실행 가이드 보기 📖</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 하단 푸터 -->
+    <footer class="court-footer">
+      <p>© 2026 행정법원 판사 시뮬레이터 | 행정법 총론 및 구제법 핵심 판례 기반 에듀테인먼트</p>
+    </footer>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
